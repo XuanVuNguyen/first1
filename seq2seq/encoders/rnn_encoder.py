@@ -85,12 +85,15 @@ class UnidirectionalRNNEncoder(Encoder):
     }
 
   def encode(self, inputs, sequence_length, **kwargs):
+    #ME: Weight initialization
     scope = tf.get_variable_scope()
     scope.set_initializer(tf.random_uniform_initializer(
         -self.params["init_scale"],
         self.params["init_scale"]))
 
+    #ME: Generate LSTM cells.
     cell = training_utils.get_rnn_cell(**self.params["rnn_cell"])
+    #Me: Build encoder RNN. tf.nn.dynamic_rnn() is being removed, use keras.layers.RNN(cell) instead
     outputs, state = tf.nn.dynamic_rnn(
         cell=cell,
         inputs=inputs,
